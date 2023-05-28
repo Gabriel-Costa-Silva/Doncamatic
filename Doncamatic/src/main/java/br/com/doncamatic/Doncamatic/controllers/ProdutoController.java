@@ -18,6 +18,20 @@ public class ProdutoController {
     @Autowired
     ProdutoService produtoService;
 
+    //API-TESTE
+    @RequestMapping(value="/teste",method = RequestMethod.GET)
+    public ResponseEntity<String> teste(){
+        try{
+            return new ResponseEntity<>("Present day, present time!! hahahaha",HttpStatus.ACCEPTED);
+        }catch (Exception e )
+        {
+            return new ResponseEntity<>("deu erro?",HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+
+
     //insert - post - save
     @PostMapping
     public ResponseEntity<String> postProduto(@RequestBody ProdutoRequest produtoRequest) {
@@ -64,17 +78,17 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponse> getById(@RequestParam Long id){
         ProdutoResponse produtoResponse = produtoService.getById(id);
         if(produtoResponse.equals(null)){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(produtoResponse,HttpStatus.ACCEPTED);
     }
 
     //getByString
-    @RequestMapping(value="/{titulo}",method = RequestMethod.GET)
+    @RequestMapping(value="/titulo/{titulo}",method = RequestMethod.GET)
     public ResponseEntity<List<ProdutoResponse>> findByTitulo(@RequestParam String titulo){
         List<ProdutoResponse> listaProdutos = produtoService.getByTitulo(titulo);
         if(listaProdutos.isEmpty()){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listaProdutos,HttpStatus.ACCEPTED);
     }
@@ -85,7 +99,7 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoResponse>> getAllSolicitacaoResponse(){
         List<ProdutoResponse> listaProdutos = produtoService.getAll();
         if(listaProdutos.isEmpty())
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(listaProdutos, HttpStatus.ACCEPTED);
     }
 
