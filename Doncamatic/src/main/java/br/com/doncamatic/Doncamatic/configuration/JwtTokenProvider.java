@@ -1,4 +1,4 @@
-package br.com.doncamatic.Doncamatic.services;
+package br.com.doncamatic.Doncamatic.configuration;
 
 import br.com.doncamatic.Doncamatic.models.User;
 import io.jsonwebtoken.Claims;

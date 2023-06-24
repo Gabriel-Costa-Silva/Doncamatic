@@ -2,7 +2,7 @@ package br.com.doncamatic.Doncamatic.controllers;
 
 import br.com.doncamatic.Doncamatic.controllers.responses.JwtAuthenticationResponse;
 import br.com.doncamatic.Doncamatic.controllers.requests.LoginRequest;
-import br.com.doncamatic.Doncamatic.services.JwtTokenProvider;
+import br.com.doncamatic.Doncamatic.configuration.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
