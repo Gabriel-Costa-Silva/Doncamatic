@@ -1,39 +1,69 @@
 package br.com.doncamatic.Doncamatic.controllers;
 
-import br.com.doncamatic.Doncamatic.controllers.responses.JwtAuthenticationResponse;
-import br.com.doncamatic.Doncamatic.controllers.requests.LoginRequest;
-import br.com.doncamatic.Doncamatic.configuration.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import br.com.doncamatic.Doncamatic.models.User;
+import br.com.doncamatic.Doncamatic.services.UserService;
+import jakarta.validation.Valid;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private UserService userService;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
+    // handler method to handle home page request
+    @GetMapping("/index")
+    public String home(){
+        return "index";
+    }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    // handler method to handle login request
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+    @GetMapping("/register")
+    public String showRegistrationForm( Model model){
+        // create model object to store form data
+        User user = new User();
+        model.addAttribute("user", user);
+        return "register";
+    }
 
-        String token = jwtTokenProvider.generateToken(authentication);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    // handler method to handle user registration form submit request
+    @PostMapping("/register/save")
+    public String registration(@Valid @ModelAttribute("user") User userDto,
+            BindingResult result,
+            Model model){
+        User existingUser = userService.findUserByEmail(userDto.getEmail());
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){
+            result.rejectValue("email", null,
+                    "There is already an account registered with the same email");
+        }
+
+        if(result.hasErrors()){
+            model.addAttribute("user", userDto);
+            return "/register";
+        }
+
+        userService.saveUser(userDto);
+        return "redirect:/register?success";
+    }
+
+    // handler method to handle list of users
+    @GetMapping("/users")
+    public String users(Model model){
+        List<User> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        return "users";
     }
 }
