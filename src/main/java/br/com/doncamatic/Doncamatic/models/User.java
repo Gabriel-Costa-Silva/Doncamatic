@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Entity
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Table(name = "User")
+@Table(name = "Usuario")
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
