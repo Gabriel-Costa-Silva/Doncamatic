@@ -3,14 +3,13 @@ package br.com.doncamatic.Doncamatic.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 
 import java.io.Serializable;
 
 @Data
 @Entity
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Table(name = "Produto")
 public class Produto implements Serializable {
 
@@ -18,6 +17,7 @@ public class Produto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Getter
     private Long id;
 
     @Column(nullable =  false, unique = false)

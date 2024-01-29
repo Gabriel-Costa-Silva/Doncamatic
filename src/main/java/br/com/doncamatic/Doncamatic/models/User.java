@@ -1,28 +1,19 @@
 package br.com.doncamatic.Doncamatic.models;
 
-import br.com.doncamatic.Doncamatic.models.enums.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Data
 @Entity
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "Usuario")
-public class User implements UserDetails {
-
-    private static final long serialVersionUID = 1L;
+public class User  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,30 +30,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable =  true, unique = false)
-    private String role;
+    private List<Role> roles;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-         return Arrays.asList(Roles.valueOf(role));
-    }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
 }

@@ -18,7 +18,8 @@ public class SpringFoxConfig {
     private static final String API_DESCRIPTION = "Doncamatic API";
     private static final String API_BASE_PACKAGE = "br.com.doncamatic";
 
-    private ApiInfo getApiInfo() {
+    @SuppressWarnings("deprecation")
+	private ApiInfo getApiInfo() {
         return new ApiInfo(API_TITLE, API_DESCRIPTION, "V3", "", AUTHOR_MAIL, "", "");
     }
     @Bean
