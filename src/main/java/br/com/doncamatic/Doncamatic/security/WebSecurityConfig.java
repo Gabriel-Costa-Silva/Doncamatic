@@ -1,6 +1,7 @@
 package br.com.doncamatic.Doncamatic.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     //filtros para validação
+    @Autowired
+    SecurityFilter securityFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,7 +36,8 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/user/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/produto").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                )//.addFilterBefore(customBasicAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                )
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

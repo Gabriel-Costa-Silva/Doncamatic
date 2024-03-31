@@ -3,7 +3,9 @@ package br.com.doncamatic.Doncamatic.controllers;
 
 import br.com.doncamatic.Doncamatic.controllers.requests.CreateUserRequest;
 import br.com.doncamatic.Doncamatic.controllers.requests.LoginRequest;
+import br.com.doncamatic.Doncamatic.controllers.responses.TokenResponse;
 import br.com.doncamatic.Doncamatic.models.User;
+import br.com.doncamatic.Doncamatic.security.TokenService;
 import br.com.doncamatic.Doncamatic.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +24,23 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
+    private TokenService tokenService;
+    @Autowired
     private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<User> login  (@RequestBody @Valid LoginRequest loginRequest){
+    public ResponseEntity<> login  (@RequestBody @Valid LoginRequest loginRequest){
 
         try {
             UsernamePasswordAuthenticationToken senha = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.senha());
             Authentication auth = this.authenticationManager.authenticate(senha);
-            User user = new User();
 
+            String  token = tokenService.generateToken((User) auth.getPrincipal());
 
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            return new ResponseEntity<>(new  TokenResponse(token), HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
